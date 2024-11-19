@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  MTG
-//
-//  Created by Nikolay Ratushnyak on 10.11.2024.
-//
-
 import UIKit
 
 @main
