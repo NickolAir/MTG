@@ -49,11 +49,15 @@ class ViewController: UIViewController {
         viewModel.onNavigateToVirtualTabletop = { [weak self] in
             let virtualTableVC = VirtualTableVC()
             self?.navigationController?.pushViewController(virtualTableVC, animated: true)
+            self?.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self?.navigationItem.backBarButtonItem?.tintColor = .systemPurple
         }
         
         viewModel.onNavigateToTotals = { [weak self] in
             let totalsVC = TotalsViewController() // Этот экран вы можете создать по аналогии
             self?.navigationController?.pushViewController(totalsVC, animated: true)
+            self?.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self?.navigationItem.backBarButtonItem?.tintColor = .systemPurple
         }
         
         // Добавляем элементы на экран
