@@ -4,7 +4,7 @@ class TotalsViewModel {
     private var counters: [Counter]
     
     init() {
-        self.counters = Array(repeating: Counter(value: 10), count: 4)
+        self.counters = Array(repeating: Counter(value: 10, title: nil), count: 4)
     }
     
     func getCounters() -> [Counter] {

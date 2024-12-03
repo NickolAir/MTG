@@ -105,6 +105,9 @@ class VirtualTableVC: UIViewController {
     }
     
     @objc private func startButtonTapped() {
-        print("Start button tapped")
+        let spellStackVC = SpellStackWindowViewController()
+        self.navigationController?.pushViewController(spellStackVC, animated: true)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = .systemPurple
     }
 }
