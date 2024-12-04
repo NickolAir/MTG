@@ -2,7 +2,9 @@ class CardCollectionViewModel {
     private var allCards: [CardModel] = [] // Полный список карт из модели
     var cards: [CardModel] = [] // Текущий список для отображения
 
-    var onCardsUpdated: (() -> Void)? // Callback для обновления UI
+    var onCardsUpdated: (() -> ())? // Callback для обновления UI
+    
+    var onCardSelected: (() -> ())?
 
     func loadCards() {
         // Имитируем загрузку карт
@@ -18,5 +20,6 @@ class CardCollectionViewModel {
     func selectCard(_ card: CardModel) {
         // Обрабатываем выбор карты (например, сохраняем в хранилище или уведомляем другой экран)
         print("Selected card: \(card.cardName)")
+        onCardSelected!() // Уведомляем родительский экран
     }
 }

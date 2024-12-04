@@ -73,6 +73,7 @@ extension CardCollectionWindowViewController: UICollectionViewDelegate, UICollec
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedCard = viewModel.cards[indexPath.row]
-        viewModel.selectCard(selectedCard)
+        onCardSelected?(selectedCard) // Уведомляем другой экран о выборе карты
+        navigationController?.popViewController(animated: true)
     }
 }

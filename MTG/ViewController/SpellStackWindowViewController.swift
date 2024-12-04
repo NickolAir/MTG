@@ -81,10 +81,13 @@ class SpellStackWindowViewController: UIViewController {
         // Открываем экран выбора карты
         let cardCollectionVC = CardCollectionWindowViewController()
         cardCollectionVC.onCardSelected = { [weak self] selectedCard in
-            self?.viewModel.addCard(selectedCard)
-            self?.updateUI()
+            guard let self = self else { return }
+            self.viewModel.addCard(selectedCard) // Сохраняем карту в массив
+            self.updateUI() // Обновляем интерфейс
         }
         navigationController?.pushViewController(cardCollectionVC, animated: true)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = .systemPurple
     }
     
     @objc private func removeCardButtonTapped() {
