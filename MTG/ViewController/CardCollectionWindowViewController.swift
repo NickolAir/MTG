@@ -3,7 +3,7 @@ import UIKit
 class CardCollectionWindowViewController: UIViewController {
     private let viewModel = CardCollectionViewModel()
     
-    var onCardSelected: ((CardModel) -> Void)?
+    var onCardSelected: ((CardModel) -> ())?
     
     private lazy var mainView: UIView = {
        let view = UIView()
