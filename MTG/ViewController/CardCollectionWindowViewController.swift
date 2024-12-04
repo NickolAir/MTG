@@ -4,12 +4,24 @@ class CardCollectionWindowViewController: UIViewController {
     private let viewModel = CardCollectionViewModel()
     
     var onCardSelected: ((CardModel) -> Void)?
+    
+    private lazy var mainView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 150, height: 200) // Настройка размера ячейки
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
+        
+        // Рассчитываем ширину ячейки как половину ширины экрана с учетом отступов
+        let screenWidth = UIScreen.main.bounds.width
+        let spacing: CGFloat = 10
+        let itemWidth = (screenWidth - 3 * spacing) / 2
+        
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth * 1.5)
+        layout.minimumLineSpacing = spacing
+        layout.minimumInteritemSpacing = spacing
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,11 +40,12 @@ class CardCollectionWindowViewController: UIViewController {
 
     private func setupUI() {
         view.addSubview(collectionView)
+        view.backgroundColor = .white
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
         ])
     }
 

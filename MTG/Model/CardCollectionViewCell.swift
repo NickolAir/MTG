@@ -5,7 +5,7 @@ class CardCollectionViewCell: UICollectionViewCell {
     
     private lazy var cardImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -16,7 +16,10 @@ class CardCollectionViewCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 2
+        label.numberOfLines = 1 // Ограничиваем текст одной строкой
+        label.adjustsFontSizeToFitWidth = true // Включаем автоуменьшение шрифта
+        label.minimumScaleFactor = 0.7 // Минимальный масштаб шрифта 
+        label.lineBreakMode = .byTruncatingTail // Обрываем текст с троеточием, если он не помещается
         return label
     }()
     
@@ -41,7 +44,7 @@ class CardCollectionViewCell: UICollectionViewCell {
             cardImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             cardImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             cardImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            cardImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.75),
+            cardImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.9),
             
             cardNameLabel.topAnchor.constraint(equalTo: cardImageView.bottomAnchor, constant: 4),
             cardNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
