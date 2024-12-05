@@ -13,12 +13,17 @@ class VirtualTableVC: UIViewController {
         return label
     }()
     
-    private lazy var stackBattlefieldSwitch: UISwitch = {
+    private lazy var nextWindowSwitch: UISwitch = {
         let toggle = UISwitch()
         toggle.onTintColor = .systemPurple
+        toggle.addTarget(self, action: #selector(nextWindowToggled), for: .valueChanged)
         toggle.translatesAutoresizingMaskIntoConstraints = false
         return toggle
     }()
+    
+    @objc func nextWindowToggled() {
+        viewModel.toggleStackBattlefieldOption(to: nextWindowSwitch.isOn)
+    }
     
     private lazy var stackSwitchLabel: UILabel = {
         let label = UILabel()
@@ -74,7 +79,7 @@ class VirtualTableVC: UIViewController {
     
     private func setupUI() {
         view.addSubview(titleLabel)
-        view.addSubview(stackBattlefieldSwitch)
+        view.addSubview(nextWindowSwitch)
         view.addSubview(stackSwitchLabel)
         view.addSubview(battlefieldSwitchLabel)
         view.addSubview(offlineSwitch)
@@ -89,19 +94,19 @@ class VirtualTableVC: UIViewController {
         
         // Констрейнты для первого Switch и его лейбла
         NSLayoutConstraint.activate([
-            stackBattlefieldSwitch.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
-            stackBattlefieldSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nextWindowSwitch.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
+            nextWindowSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            stackSwitchLabel.centerYAnchor.constraint(equalTo: stackBattlefieldSwitch.centerYAnchor),
-            stackSwitchLabel.trailingAnchor.constraint(equalTo: stackBattlefieldSwitch.leadingAnchor, constant: -10),
-            battlefieldSwitchLabel.centerYAnchor.constraint(equalTo: stackBattlefieldSwitch.centerYAnchor),
-            battlefieldSwitchLabel.leadingAnchor.constraint(equalTo: stackBattlefieldSwitch.trailingAnchor, constant: 10)
+            stackSwitchLabel.centerYAnchor.constraint(equalTo: nextWindowSwitch.centerYAnchor),
+            stackSwitchLabel.trailingAnchor.constraint(equalTo: nextWindowSwitch.leadingAnchor, constant: -10),
+            battlefieldSwitchLabel.centerYAnchor.constraint(equalTo: nextWindowSwitch.centerYAnchor),
+            battlefieldSwitchLabel.leadingAnchor.constraint(equalTo: nextWindowSwitch.trailingAnchor, constant: 10)
             
         ])
         
         // Констрейнты для второго Switch и его лейбла
         NSLayoutConstraint.activate([
-            offlineSwitch.topAnchor.constraint(equalTo: stackBattlefieldSwitch.bottomAnchor, constant: 40),
+            offlineSwitch.topAnchor.constraint(equalTo: nextWindowSwitch.bottomAnchor, constant: 40),
             offlineSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             offlineSwitchLabel.centerYAnchor.constraint(equalTo: offlineSwitch.centerYAnchor),
@@ -118,9 +123,17 @@ class VirtualTableVC: UIViewController {
     }
     
     @objc private func startButtonTapped() {
-        let spellStackVC = SpellStackWindowViewController()
-        self.navigationController?.pushViewController(spellStackVC, animated: true)
+        let isNextWindowIsBattlefield = viewModel.stackBatllefieldSwitchOption
+        if (isNextWindowIsBattlefield) {
+            
+        }
+        else {
+            let spellStackVC = SpellStackWindowViewController()
+            self.navigationController?.pushViewController(spellStackVC, animated: true)
+        }
+        
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationItem.backBarButtonItem?.tintColor = .systemPurple
+        
     }
 }
