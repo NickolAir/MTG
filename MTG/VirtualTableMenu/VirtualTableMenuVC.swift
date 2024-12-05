@@ -13,7 +13,7 @@ class VirtualTableVC: UIViewController {
         return label
     }()
     
-    private lazy var stackSwitch: UISwitch = {
+    private lazy var stackBattlefieldSwitch: UISwitch = {
         let toggle = UISwitch()
         toggle.onTintColor = .systemPurple
         toggle.translatesAutoresizingMaskIntoConstraints = false
@@ -23,6 +23,15 @@ class VirtualTableVC: UIViewController {
     private lazy var stackSwitchLabel: UILabel = {
         let label = UILabel()
         label.text = "Stack"
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var battlefieldSwitchLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Battlefield"
         label.font = UIFont.systemFont(ofSize: 18)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -65,8 +74,9 @@ class VirtualTableVC: UIViewController {
     
     private func setupUI() {
         view.addSubview(titleLabel)
-        view.addSubview(stackSwitch)
+        view.addSubview(stackBattlefieldSwitch)
         view.addSubview(stackSwitchLabel)
+        view.addSubview(battlefieldSwitchLabel)
         view.addSubview(offlineSwitch)
         view.addSubview(offlineSwitchLabel)
         view.addSubview(startButton)
@@ -79,16 +89,19 @@ class VirtualTableVC: UIViewController {
         
         // Констрейнты для первого Switch и его лейбла
         NSLayoutConstraint.activate([
-            stackSwitch.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
-            stackSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackBattlefieldSwitch.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
+            stackBattlefieldSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            stackSwitchLabel.centerYAnchor.constraint(equalTo: stackSwitch.centerYAnchor),
-            stackSwitchLabel.trailingAnchor.constraint(equalTo: stackSwitch.leadingAnchor, constant: -10)
+            stackSwitchLabel.centerYAnchor.constraint(equalTo: stackBattlefieldSwitch.centerYAnchor),
+            stackSwitchLabel.trailingAnchor.constraint(equalTo: stackBattlefieldSwitch.leadingAnchor, constant: -10),
+            battlefieldSwitchLabel.centerYAnchor.constraint(equalTo: stackBattlefieldSwitch.centerYAnchor),
+            battlefieldSwitchLabel.leadingAnchor.constraint(equalTo: stackBattlefieldSwitch.trailingAnchor, constant: 10)
+            
         ])
         
         // Констрейнты для второго Switch и его лейбла
         NSLayoutConstraint.activate([
-            offlineSwitch.topAnchor.constraint(equalTo: stackSwitch.bottomAnchor, constant: 40),
+            offlineSwitch.topAnchor.constraint(equalTo: stackBattlefieldSwitch.bottomAnchor, constant: 40),
             offlineSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             offlineSwitchLabel.centerYAnchor.constraint(equalTo: offlineSwitch.centerYAnchor),

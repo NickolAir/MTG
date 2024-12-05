@@ -67,19 +67,18 @@ class ViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150),
-            
-            tabletopButton.widthAnchor.constraint(equalToConstant: 150),
+        
             tabletopButton.heightAnchor.constraint(equalToConstant: 150),
-            tabletopButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            tabletopButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 100),
+            tabletopButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 30),
             tabletopButton.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -20),
+            tabletopButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             
-            totalsButton.widthAnchor.constraint(equalToConstant: 150),
+            
             totalsButton.heightAnchor.constraint(equalToConstant: 150),
-            totalsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            totalsButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 100),
+            totalsButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -30),
             totalsButton.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 20),
+            totalsButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: totalsButton.topAnchor, constant: -50),
         ])
     }
     

@@ -2,17 +2,17 @@ import Foundation
 
 class VirtualTableViewModel {
 
-    var stackSwitchOption: Bool = false
+    var stackBatllefieldSwitchOption: Bool = false
     var offlineSwitchOption: Bool = false
     
     // Замыкания для передачи обновлений в ViewController
-    var stackOptionChange: ((Bool) -> Void)?
+    var stackBattlefieldOptionChange: ((Bool) -> Void)?
     var offlineOptionChange: ((Bool) -> Void)?
     var onStartAction: (() -> Void)?
     
-    func toggleStackOption(to value: Bool) {
-        stackSwitchOption = value
-        stackOptionChange?(value)
+    func toggleStackBattlefieldOption(to value: Bool) {
+        stackBatllefieldSwitchOption = value
+        stackBattlefieldOptionChange?(value)
     }
     
     func toggleOfflineOption(to value: Bool) {
