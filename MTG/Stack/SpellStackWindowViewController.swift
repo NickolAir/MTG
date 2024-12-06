@@ -20,55 +20,63 @@ class SpellStackWindowViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupNavigationBar() {
-       title = "Stack"
-       
-       // Кнопка возврата - стрелка
-       navigationItem.leftBarButtonItem = UIBarButtonItem(
-           image: UIImage(systemName: "arrow.left"), // Стрелка назад
-           style: .plain,
-           target: self,
-           action: #selector(backButtonTapped)
-       )
-       
-       // Кнопки "+" и "-" с большим расстоянием
-       let plusButton = UIBarButtonItem(
-           title: "+",
-           style: .plain,
-           target: self,
-           action: #selector(addCardButtonTapped)
-       )
-       
-       let minusButton = UIBarButtonItem(
-           title: "-",
-           style: .plain,
-           target: self,
-           action: #selector(removeCardButtonTapped)
-       )
-       
-        // Устанавливаем больший шрифт для кнопок
-        plusButton.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 30)], for: .normal)
-        minusButton.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 30)], for: .normal)
+        // Создаем кнопки + и -
+        let plusButton = createRoundButton(
+            title: "+",
+            backgroundColor: .systemPurple,
+            action: #selector(addCardButtonTapped)
+        )
         
-        // Устанавливаем кнопки в navigationItem
-        navigationItem.rightBarButtonItems = [
-            plusButton,
-            minusButton
-        ]
+        let minusButton = createRoundButton(
+            title: "-",
+            backgroundColor: .systemPurple,
+            action: #selector(removeCardButtonTapped)
+        )
         
-        // Задаем фиолетовый цвет для кнопок
-        navigationItem.leftBarButtonItem?.tintColor = .systemPurple
-        navigationItem.rightBarButtonItems?.forEach { $0.tintColor = .systemPurple }
+        // Создаем заголовок
+        let titleLabel = UILabel()
+        titleLabel.text = "Stack"
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        titleLabel.textColor = .black
+        titleLabel.textAlignment = .center
+        
+        // Создаем горизонтальный стек для размещения кнопок и заголовка
+        let stackView = UIStackView(arrangedSubviews: [minusButton, titleLabel, plusButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        stackView.distribution = .equalCentering
+        
+        // Устанавливаем стек как titleView
+        navigationItem.titleView = stackView
+    }
+    
+    private func createRoundButton(title: String, backgroundColor: UIColor, action: Selector) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 25, weight: .bold)
+        button.backgroundColor = backgroundColor
+        button.layer.cornerRadius = 20
+        button.clipsToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
     }
     
     private func setupUI() {
         view.addSubview(cardImageView)
         
+        let width = UIScreen.main.bounds.width / 1.2
+        
         // Констрейнты для карты
         NSLayoutConstraint.activate([
             cardImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             cardImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            cardImageView.widthAnchor.constraint(equalToConstant: 200),
-            cardImageView.heightAnchor.constraint(equalToConstant: 300)
+            cardImageView.widthAnchor.constraint(equalToConstant: width),
+            cardImageView.heightAnchor.constraint(equalToConstant: width * 1.5)
         ])
     }
     
