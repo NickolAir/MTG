@@ -30,20 +30,15 @@ class BattlefieldViewController: UIViewController {
     private func setupNavigationBar() {
         title = "Stack"
         
-        // Кнопка возврата - стрелка
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.left"), // Стрелка назад
-            style: .plain,
-            target: self,
-            action: #selector(backButtonTapped)
-        )
         
         let plusButton = UIBarButtonItem(
-            title: "+",
+            image: UIImage(systemName: "plus"),
             style: .plain,
             target: self,
             action: #selector(addCardButtonTapped)
         )
+        
+        navigationItem.rightBarButtonItem = plusButton
     }
     
     
@@ -52,6 +47,8 @@ class BattlefieldViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        view.backgroundColor = .white
+        setupNavigationBar()
         setupUI()
         super.viewDidLoad()
     }

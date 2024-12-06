@@ -125,7 +125,8 @@ class VirtualTableVC: UIViewController {
     @objc private func startButtonTapped() {
         let isNextWindowIsBattlefield = viewModel.stackBatllefieldSwitchOption
         if (isNextWindowIsBattlefield) {
-            
+            let battlefieldVC = BattlefieldViewController()
+            self.navigationController?.pushViewController(battlefieldVC, animated: true)
         }
         else {
             let spellStackVC = SpellStackWindowViewController()
