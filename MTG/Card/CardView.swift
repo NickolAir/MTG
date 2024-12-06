@@ -7,7 +7,11 @@
 import UIKit
 
 class CardView: UIView {
-    var viewModel: CardViewModel
+    var viewModel: CardViewModel? {
+        didSet {
+            
+        }
+    }
     
     init(frame: CGRect, color: UIColor) {
             super.init(frame: frame)
