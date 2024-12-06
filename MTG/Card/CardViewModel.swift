@@ -5,6 +5,12 @@
 //  Created by Леонид Шайхутдинов on 06.12.2024.
 //
 
-class CardViewModel {
-    
+import Foundation
+
+struct CardViewModel {
+    var imagePath: String
+    let cardName: String
+    let cardColors: [CardColor]
+    var linkedCards: [CardModel]
+    let cardColor: CardColor
 }

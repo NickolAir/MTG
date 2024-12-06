@@ -12,3 +12,4 @@ enum CardColor: String {
     case red
     case green
 }
+
