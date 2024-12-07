@@ -11,6 +11,12 @@ class SpellStackWindowViewController: UIViewController {
         return imageView
     }()
     
+    private lazy var cardStackView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -67,16 +73,14 @@ class SpellStackWindowViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.addSubview(cardImageView)
+        view.addSubview(cardStackView)
         
-        let width = UIScreen.main.bounds.width / 1.2
-        
-        // Констрейнты для карты
+        // Констрейнты для cardStackView
         NSLayoutConstraint.activate([
-            cardImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            cardImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            cardImageView.widthAnchor.constraint(equalToConstant: width),
-            cardImageView.heightAnchor.constraint(equalToConstant: width * 1.5)
+            cardStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            cardStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            cardStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            cardStackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.6)
         ])
     }
     
@@ -106,11 +110,28 @@ class SpellStackWindowViewController: UIViewController {
     
     // MARK: - Update UI
     private func updateUI() {
-        if let lastCard = viewModel.getLastCard() {
-            cardImageView.image = UIImage(named: lastCard.imagePath)
-        } else {
-            cardImageView.image = nil
+        // Очистка старых карт
+        cardStackView.subviews.forEach { $0.removeFromSuperview() }
+        
+        // Добавление каждой карты из модели
+        let cards = viewModel.getAllCards() // Предполагается, что метод возвращает массив всех карт
+        
+        for (index, card) in cards.enumerated() {
+            let imageView = UIImageView()
+            imageView.image = UIImage(named: card.imagePath)
+            imageView.contentMode = .scaleAspectFit
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            cardStackView.addSubview(imageView)
+            
+            // Смещение карты
+            let offset = CGFloat(index * 35) // Смещение между картами
+            
+            NSLayoutConstraint.activate([
+                imageView.centerXAnchor.constraint(equalTo: cardStackView.centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: cardStackView.centerYAnchor, constant: offset),
+                imageView.widthAnchor.constraint(equalTo: cardStackView.widthAnchor, multiplier: 0.8),
+                imageView.heightAnchor.constraint(equalTo: cardStackView.heightAnchor, multiplier: 0.8)
+            ])
         }
     }
 }
-

@@ -19,4 +19,8 @@ class SpellStackWindowViewModel {
     func getLastCard() -> CardModel? {
         return cards.last
     }
+    
+    func getAllCards() -> [CardModel] {
+        return cards // cards - массив всех добавленных карт
+    }
 }
