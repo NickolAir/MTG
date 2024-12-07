@@ -3,8 +3,8 @@ import UIKit
 class CardCollectionViewCell: UICollectionViewCell {
     static let identifier = "CardCollectionViewCell"
     
-    private lazy var cardImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var cardImageView: DownloadableImageView = {
+        let imageView = DownloadableImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +54,7 @@ class CardCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with card: CardModel) {
-        cardImageView.image = UIImage(named: card.imageUrl) 
-        cardNameLabel.text = card.cardName
+        cardImageView.loadImage(url: card.imageUrl)
+        cardNameLabel.text = card.name
     }
 }

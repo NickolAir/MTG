@@ -1,17 +1,34 @@
+import Foundation
+import Combine
+
 class CardCollectionViewModel {
+    var isOnlineSource = false
     private var allCards: [CardModel] = [] // Полный список карт из модели
     var cards: [CardModel] = [] // Текущий список для отображения
 
-    var onCardsUpdated: (() -> ())? // Callback для обновления UI
+    var onCardsUpdated: (() -> Void)? // Callback для обновления UI
+    private var cancellables: Set<AnyCancellable> = [] // Хранилище подписок Combine
 
     func loadCards() {
-        // Имитируем загрузку карт
-        allCards = [
-            CardModel(id: 0, imageUrl: "card1", cardName: "Card 1"),
-            CardModel(id: 1, imageUrl: "card2", cardName: "Card 2"),
-            CardModel(id: 2, imageUrl: "card3", cardName: "Card 3"),
-        ]
-        cards = allCards
+        print("Loading cards")
+
+        HTTPService.shared.fetchAllCards(from: URL(string: "http://37.46.135.99")!)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Данные успешно загружены.")
+                case .failure(let error):
+                    print("Ошибка при загрузке данных: \(error.localizedDescription)")
+                }
+            }, receiveValue: { cards in
+                print("Полученные карты (\(cards.count)):")
+                cards.forEach { card in
+                    print("ID: \(card.id), Name: \(card.name)")
+                }
+                self.cards = cards
+                self.onCardsUpdated?() // Вызываем callback после получения данных
+            })
+            .store(in: &cancellables) // Сохраняем подписку
         onCardsUpdated?()
     }
 }

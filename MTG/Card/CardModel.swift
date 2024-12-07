@@ -1,7 +1,8 @@
-struct CardModel: Codable {
+import Foundation
+struct CardModel: Decodable {
     let id: Int
     let imageUrl: String
-    let cardName: String
+    let name: String
     //let cardColors: [CardColor]
     //var linkedCards: [CardModel]
 }

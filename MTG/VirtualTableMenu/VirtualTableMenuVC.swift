@@ -124,6 +124,7 @@ class VirtualTableVC: UIViewController {
     
     @objc private func startButtonTapped() {
         let isNextWindowIsBattlefield = viewModel.stackBatllefieldSwitchOption
+        
         if (isNextWindowIsBattlefield) {
             let battlefieldVC = BattlefieldViewController()
             self.navigationController?.pushViewController(battlefieldVC, animated: true)
@@ -137,4 +138,6 @@ class VirtualTableVC: UIViewController {
         self.navigationItem.backBarButtonItem?.tintColor = .systemPurple
         
     }
+    
+    
 }
