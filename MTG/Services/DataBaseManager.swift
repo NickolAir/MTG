@@ -6,7 +6,9 @@
 //
 
 protocol DataBaseManager {
-    func getCard(id: Int) -> CardModel
-    func getImagePath(for cardId: Int) -> String
+    func getCard(id: Int) -> CardModel?
+    func getImagePath(id: Int) -> String?
     func getAllCards() -> [CardModel]
+    func insertCard(id: Int, name: String, imageUrl: String) -> Bool
 }
+
