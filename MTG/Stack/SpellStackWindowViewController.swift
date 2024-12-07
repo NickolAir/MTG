@@ -118,7 +118,7 @@ class SpellStackWindowViewController: UIViewController {
         
         for (index, card) in cards.enumerated() {
             let imageView = UIImageView()
-            imageView.image = UIImage(named: card.imagePath)
+            imageView.image = UIImage(named: card.imageUrl)
             imageView.contentMode = .scaleAspectFit
             imageView.translatesAutoresizingMaskIntoConstraints = false
             cardStackView.addSubview(imageView)

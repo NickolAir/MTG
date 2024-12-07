@@ -10,5 +10,6 @@ protocol DataBaseManager {
     func getImagePath(id: Int) -> String?
     func getAllCards() -> [CardModel]
     func insertCard(id: Int, name: String, imageUrl: String) -> Bool
+    func insertCards(cards: [CardModel])
 }
 

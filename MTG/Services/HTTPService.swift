@@ -12,5 +12,6 @@ import Combine
 protocol APIService {
     func fetchCard(from url: URL) -> AnyPublisher<CardModel, Error>
     func fethcDeck(from url: URL) -> AnyPublisher<DeckModel, Error>
+    func fetchAllCards(from url: URL) -> AnyPublisher<CardModel, Error> 
 }
 

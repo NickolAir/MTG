@@ -1,6 +1,6 @@
 struct CardModel: Codable {
     let id: Int
-    let imagePath: String
+    let imageUrl: String
     let cardName: String
     //let cardColors: [CardColor]
     //var linkedCards: [CardModel]

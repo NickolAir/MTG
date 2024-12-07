@@ -52,7 +52,7 @@ class SQLiteManager: DataBaseManager {
             let id = sqlite3_column_int(queryStatement, 0)
             let name = String(cString: sqlite3_column_text(queryStatement, 1))
             let imageUrl = String(cString: sqlite3_column_text(queryStatement, 2))
-            return CardModel(id: Int(id), imagePath: imageUrl, cardName: name)
+            return CardModel(id: Int(id), imageUrl: imageUrl, cardName: name)
         } else {
             print("Ошибка подготовки SELECT запроса: \(String(cString: sqlite3_errmsg(db)))")
         }
@@ -85,7 +85,7 @@ class SQLiteManager: DataBaseManager {
                 let id = sqlite3_column_int(queryStatement, 0)
                 let name = String(cString: sqlite3_column_text(queryStatement, 1))
                 let imageUrl = String(cString: sqlite3_column_text(queryStatement, 2))
-                cards.append(CardModel(id: Int(id), imagePath: imageUrl, cardName: name))
+                cards.append(CardModel(id: Int(id), imageUrl: imageUrl, cardName: name))
             }
         } else {
             print("Ошибка подготовки SELECT запроса: \(String(cString: sqlite3_errmsg(db)))")
@@ -132,5 +132,11 @@ class SQLiteManager: DataBaseManager {
         
         sqlite3_finalize(queryStatement)
         return false
+    }
+    
+    func insertCards(cards: [CardModel]) {
+        for card in cards {
+            insertCard(id: card.id, name: card.cardName, imageUrl: card.imageUrl)
+        }
     }
 }
