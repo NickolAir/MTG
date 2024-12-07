@@ -1,8 +1,9 @@
-struct CardModel {
+struct CardModel: Codable {
+    let id: Int
     let imagePath: String
     let cardName: String
-    let cardColors: [CardColor]
-    var linkedCards: [CardModel]
+    //let cardColors: [CardColor]
+    //var linkedCards: [CardModel]
 }
 
 enum CardColor: String {
