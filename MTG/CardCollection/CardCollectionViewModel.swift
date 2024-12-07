@@ -9,7 +9,7 @@ class CardCollectionViewModel {
     var onCardsUpdated: (() -> Void)? // Callback для обновления UI
     private var cancellables: Set<AnyCancellable> = [] // Хранилище подписок Combine
 
-    func loadCards() {
+    func loadCards(){
         print("Loading cards")
 
         HTTPService.shared.fetchAllCards(from: URL(string: "http://37.46.135.99")!)
@@ -26,9 +26,8 @@ class CardCollectionViewModel {
                     print("ID: \(card.id), Name: \(card.name)")
                 }
                 self.cards = cards
-                self.onCardsUpdated?() // Вызываем callback после получения данных
+                self.onCardsUpdated?()
             })
             .store(in: &cancellables) // Сохраняем подписку
-        onCardsUpdated?()
     }
 }

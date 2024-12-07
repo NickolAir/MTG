@@ -54,7 +54,7 @@ class CardCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with card: CardModel) {
-        cardImageView.loadImage(url: card.imageUrl)
+        cardImageView.loadImage(url: card.picture.url!)
         cardNameLabel.text = card.name
     }
 }

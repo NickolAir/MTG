@@ -1,9 +1,11 @@
 import UIKit
+import Combine
 
 class CardCollectionWindowViewController: UIViewController {
     private let viewModel = CardCollectionViewModel()
     
     var onCardSelected: ((CardModel) -> ())?
+
     
     private lazy var mainView: UIView = {
        let view = UIView()
@@ -51,7 +53,9 @@ class CardCollectionWindowViewController: UIViewController {
 
     private func bindViewModel() {
         viewModel.onCardsUpdated = { [weak self] in
-            self?.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
         }
     }
 }
