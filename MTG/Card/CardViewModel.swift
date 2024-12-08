@@ -13,4 +13,5 @@ struct CardViewModel {
     let cardColors: [CardColor]
     var linkedCards: [CardModel]
     let cardColor: CardColor
+    var position: CGPoint
 }
