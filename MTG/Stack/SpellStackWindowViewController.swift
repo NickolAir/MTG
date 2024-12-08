@@ -102,7 +102,7 @@ class SpellStackWindowViewController: UIViewController {
     
     @objc private func addCardButtonTapped() {
         // Открываем экран выбора карты
-        let cardCollectionVC = CardCollectionWindowViewController(isOnlinePull: self.isOnlinePull)
+        let cardCollectionVC = CardCollectionWindowViewController()
         cardCollectionVC.onCardSelected = { [weak self] selectedCard in
             guard let self = self else { return }
             self.viewModel.addCard(selectedCard) // Сохраняем карту в массив

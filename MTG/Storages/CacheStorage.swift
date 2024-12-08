@@ -26,6 +26,7 @@ class CacheStorage {
         // Преобразуем ключ в NSString, чтобы использовать его в качестве ключа для NSCache
         let cacheKey = NSString(string: key)
         imageCache.setObject(image, forKey: cacheKey)
+        print("Изображение \(key) успешно сохранено в кэш")
     }
     
     // Метод для получения изображения по ключу

@@ -4,11 +4,8 @@ import Combine
 class CardCollectionWindowViewController: UIViewController {
     private let viewModel: CardCollectionViewModel
     
-    var isOnlinePull: Bool
-    
-    init(isOnlinePull: Bool) {
-        self.isOnlinePull = isOnlinePull
-        self.viewModel = CardCollectionViewModel(dbManager: SQLiteManager(), isOnlinePull: self.isOnlinePull)
+    init() {
+        self.viewModel = CardCollectionViewModel(dbManager: SQLiteManager())
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -118,7 +115,11 @@ extension CardCollectionWindowViewController: UICollectionViewDelegate, UICollec
 // MARK: - UISearchBarDelegate
 extension CardCollectionWindowViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.filterCards(by: searchText) // Передаём строку поиска в ViewModel
+        viewModel.filterCards(by: searchText)
+            .sink(receiveCompletion: {_ in
+                self.collectionView.reloadData()
+            }, receiveValue: {}
+            ).store(in: &cancellables)// Сбрасываем поиск
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -127,7 +128,17 @@ extension CardCollectionWindowViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
-        viewModel.filterCards(by: "") // Сбрасываем поиск
-        searchBar.resignFirstResponder() // Скрываем клавиатуру
+        viewModel.filterCards(by: "")
+            .sink(receiveCompletion: {_ in 
+                self.collectionView.reloadData()
+                searchBar.resignFirstResponder() // Скрываем клавиатуру
+            }, receiveValue: {}
+            ).store(in: &cancellables)// Сбрасываем поиск
+         
     }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            // Скрыть клавиатуру
+            view.endEditing(true)
+        }
 }

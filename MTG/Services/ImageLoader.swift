@@ -24,7 +24,8 @@ class ImageLoader {
         return CacheStorage.shared.getImage(forKey: "CardImage_\(id)")
             .flatMap { image -> AnyPublisher<UIImage, Error> in
                 if let image = image {
-                    // Картинка найдена на диске
+                    // Картинка найдена в кэше
+                    print("Изображение id: \(id) загружено из кэша")
                     return Just(image)
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
@@ -33,6 +34,7 @@ class ImageLoader {
                         .flatMap { image -> AnyPublisher<UIImage, Error> in
                             if let image = image {
                                 // Картинка найдена на диске
+                                print("Изображение id: \(id) загружено с диска")
                                 return Just(image)
                                     .setFailureType(to: Error.self)
                                     .eraseToAnyPublisher()
@@ -47,6 +49,7 @@ class ImageLoader {
                                         guard let image = UIImage(data: data) else {
                                             throw URLError(.cannotDecodeContentData)
                                         }
+                                        print("Изображение id: \(id) загружено с сервера")
                                         // Сохраняем изображение на диск
                                         let fileName = "CardImage_\(id)"
                                         CacheStorage.shared.saveImage(image, forKey: fileName)

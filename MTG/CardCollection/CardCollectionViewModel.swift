@@ -2,7 +2,6 @@ import Foundation
 import Combine
 
 class CardCollectionViewModel {
-    var isOnlinePull = false
     private var allCards: [CardModel] = [] // Полный список карт из модели
     var cards: [CardModel] = [] // Текущий список для отображения
     
@@ -12,7 +11,6 @@ class CardCollectionViewModel {
     
     init(dbManager: DataBaseManager, isOnlinePull: Bool = false) {
         self.DBManager = dbManager
-        self.isOnlinePull = isOnlinePull
     }
 
     func loadCards() -> AnyPublisher<Bool, Error> {
@@ -32,12 +30,30 @@ class CardCollectionViewModel {
                     }
                 }, receiveValue: { cards in
                     self.cards = cards
+                    self.allCards = cards
                     print("Получено \(cards.count) карт.")
                     promise(.success(true)) // Передаем данные в promise
                 })
                 .store(in: &self.cancellables) // Сохраняем подписку в cancellables
         }
         .eraseToAnyPublisher() // Возвращаем результат как AnyPublisher
+    }
+    
+    func filterCards(by query: String) -> AnyPublisher<Void, Never> {
+        Future<Void, Never> { promise in
+            // Выполняем фильтрацию
+            if query.isEmpty {
+                self.cards = self.allCards // Если строка поиска пустая, показываем все карты
+            } else {
+                self.cards = self.allCards.filter { card in
+                    card.name?.lowercased().contains(query.lowercased()) ?? false // Фильтрация по имени
+                }
+            }
+            
+            // Уведомляем о завершении обновления
+            promise(.success(()))
+        }
+        .eraseToAnyPublisher()
     }
             
 

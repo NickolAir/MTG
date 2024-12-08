@@ -136,30 +136,47 @@ class VirtualTableVC: UIViewController {
 
         }
         
+        // Настройка navigation bar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = .systemPurple
+        
+        // Удаляем данные в базе данных (для теста) и скачиваем их с сервера
         if onlineSwitch.isOn {
-            DataSyncService.shared.DBManager.deleteAllData()
-            DataSyncService.shared.fetchAllCards()
+            DiskStorage.shared.clearStorage()
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        DataSyncService.shared.DBManager.printAllCards()
+                        DataSyncService.shared.DBManager.deleteAllData()
+                        DataSyncService.shared.fetchAllCards()
+                            .sink(receiveCompletion: { completion in
+                                switch completion {
+                                case .finished:
+                                    DataSyncService.shared.DBManager.printAllCards()
+                                    DispatchQueue.main.async {
+                                        self.navigationController?.pushViewController(nextVC, animated: true)
+                                    }
+                                case .failure(let error):
+                                    print("Ошибка при синхронизации данных: \(error.localizedDescription)")
+
+                                }
+                            
+                            }, receiveValue: {
+                                
+                            }).store(in: &self.cancellables)
+                    case .failure(let error):
+                        print("Произошла ошика при удалении данных с диска: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             self.navigationController?.pushViewController(nextVC, animated: true)
                         }
-                    case .failure(let error):
-                        print("Ошибка при синхронизации данных: \(error.localizedDescription)")
-
                     }
-                
-                }, receiveValue: {
                     
-                }).store(in: &cancellables)
+                    
+                }, receiveValue: {})
+                .store(in: &cancellables)
+            
         }
         
         else {
-            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-            self.navigationItem.backBarButtonItem?.tintColor = .systemPurple
-            
             DispatchQueue.main.async {
                 self.navigationController?.pushViewController(nextVC, animated: true)
             }
