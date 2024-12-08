@@ -25,10 +25,17 @@ extension Downloadable where Self: UIImageView {
                 }
             }, receiveValue: { image in
                 print("Изображение успешно получено.")
-                self.image = image
+                DispatchQueue.main.async {
+                        self.image = image // Обновляем UI на главном потоке
+                    }
             })
+
+        // Хранение подписки для предотвращения её уничтожения
+        (self as? DownloadableImageView)?.cancellable = cancellable
     }
 }
 
-class DownloadableImageView: UIImageView, Downloadable {}
+class DownloadableImageView: UIImageView, Downloadable {
+    var cancellable: AnyCancellable? // Свойство для хранения подписки
+}
 

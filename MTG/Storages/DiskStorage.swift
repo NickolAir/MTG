@@ -31,7 +31,7 @@ class DiskStorage {
                     do {
                         try imageData.write(to: filePath)
                     } catch {
-                        print("Ошибка сохранения изображения \(key): \(error.localizedDescription)")
+                        print("Ошибка сохранения изображения \(key): \(error.localizedDescription), filePath = \(filePath)")
                     }
                 }
             }
@@ -67,6 +67,7 @@ class DiskStorage {
                 }
                 
                 DispatchQueue.main.async {
+                    print("Картинка \(forKey) не найдена на диске")
                     promise(.success(nil))
                 }
             }

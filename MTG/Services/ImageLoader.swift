@@ -20,8 +20,12 @@ class ImageLoader {
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 } else {
+                    guard let imageURL = URL(string: url) else {
+                        return Fail<UIImage, Error>(error: URLError(.badURL))
+                            .eraseToAnyPublisher()
+                    }
                     // Картинка не найдена, скачиваем с сервера
-                    return URLSession.shared.dataTaskPublisher(for: URL(string: url)!)
+                    return URLSession.shared.dataTaskPublisher(for: imageURL)
                         .tryMap { data, response -> UIImage in
                             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                                 throw URLError(.badServerResponse)
@@ -30,7 +34,8 @@ class ImageLoader {
                                 throw URLError(.cannotDecodeContentData)
                             }
                             // Сохраняем изображение на диск
-                            DiskStorage.shared.saveImage(image, forKey: url)
+                            let fileName = imageURL.lastPathComponent
+                            DiskStorage.shared.saveImage(image, forKey: fileName)
                             return image
                         }
                         .eraseToAnyPublisher()
