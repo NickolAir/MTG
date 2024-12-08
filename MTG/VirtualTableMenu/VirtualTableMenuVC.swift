@@ -74,10 +74,28 @@ class VirtualTableVC: UIViewController {
         return button
     }()
     
+    // Лоадер
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true // Автоматически скрывается при остановке
+        return indicator
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+    }
+    
+    // Показываем лоадер
+    private func showLoader() {
+        activityIndicator.startAnimating()
+    }
+    
+    // Скрываем лоадер
+    private func hideLoader() {
+        activityIndicator.stopAnimating()
     }
     
     private func setupUI() {
@@ -88,6 +106,7 @@ class VirtualTableVC: UIViewController {
         view.addSubview(onlineSwitch)
         view.addSubview(offlineSwitchLabel)
         view.addSubview(startButton)
+        view.addSubview(activityIndicator)
         
         // Констрейнты для titleLabel
         NSLayoutConstraint.activate([
@@ -123,6 +142,11 @@ class VirtualTableVC: UIViewController {
             startButton.widthAnchor.constraint(equalToConstant: 150),
             startButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     @objc private func startButtonTapped() {
@@ -142,20 +166,22 @@ class VirtualTableVC: UIViewController {
         
         // Удаляем данные в базе данных (для теста) и скачиваем их с сервера
         if onlineSwitch.isOn {
-            DiskStorage.shared.clearStorage()
+            showLoader()
+            DataSyncService.shared.DBManager.deleteAllData()
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        DataSyncService.shared.DBManager.deleteAllData()
                         DataSyncService.shared.fetchAllCards()
                             .sink(receiveCompletion: { completion in
                                 switch completion {
                                 case .finished:
                                     DataSyncService.shared.DBManager.printAllCards()
                                     DispatchQueue.main.async {
+                                        self.hideLoader()
                                         self.navigationController?.pushViewController(nextVC, animated: true)
                                     }
                                 case .failure(let error):
+                                    self.hideLoader()
                                     print("Ошибка при синхронизации данных: \(error.localizedDescription)")
 
                                 }
@@ -164,15 +190,10 @@ class VirtualTableVC: UIViewController {
                                 
                             }).store(in: &self.cancellables)
                     case .failure(let error):
-                        print("Произошла ошика при удалении данных с диска: \(error.localizedDescription)")
-                        DispatchQueue.main.async {
-                            self.navigationController?.pushViewController(nextVC, animated: true)
-                        }
+                        print("Ошибка удаления данных из базы данных: \(error.localizedDescription)")
                     }
-                    
-                    
                 }, receiveValue: {})
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
             
         }
         

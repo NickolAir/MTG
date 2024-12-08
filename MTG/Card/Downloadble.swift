@@ -36,6 +36,6 @@ extension Downloadable where Self: UIImageView {
 }
 
 class DownloadableImageView: UIImageView, Downloadable {
-    var cancellable: AnyCancellable? // Свойство для хранения подписки
+    var cancellable: AnyCancellable? // Свойство для хранения подписок
 }
 

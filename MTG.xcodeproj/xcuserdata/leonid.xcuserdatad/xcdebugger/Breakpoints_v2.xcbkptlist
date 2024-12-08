@@ -46,8 +46,8 @@
             filePath = "MTG/CardCollection/CardCollectionViewCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "configure(with:)"
             landmarkType = "7">
          </BreakpointContent>

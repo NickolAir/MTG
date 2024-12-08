@@ -287,50 +287,63 @@ class SQLiteManager: DataBaseManager {
         }
     }
     
-    func deleteAllData() {
-        // Отключаем проверки внешних ключей, чтобы избежать ошибок при удалении
-        let disableForeignKeyQuery = "PRAGMA foreign_keys = OFF;"
-        
-        // Подготовка запроса на удаление данных
-        let deleteCardsQuery = "DELETE FROM Cards;"
-        let deletePicturesQuery = "DELETE FROM Pictures;"
-        let deleteRelationsQuery = "DELETE FROM CardRelations;"
-
-        // Открытие базы данных
-        var db: OpaquePointer?
-        guard let dbFilePath = dbFilePath else {
-            return
-        }
-        
-        if sqlite3_open(dbFilePath.path, &db) != SQLITE_OK {
-            print("Не удалось открыть базу данных.")
-            return
-        }
-        
-        // Отключаем проверки внешних ключей перед выполнением удаления
-        if sqlite3_exec(db, disableForeignKeyQuery, nil, nil, nil) != SQLITE_OK {
-            print("Не удалось отключить внешние ключи: \(String(cString: sqlite3_errmsg(db)))")
-            return
-        }
-        
-        // Удаляем данные из таблиц
-        let queries = [deleteCardsQuery, deletePicturesQuery, deleteRelationsQuery]
-        
-        for query in queries {
-            if sqlite3_exec(db, query, nil, nil, nil) != SQLITE_OK {
-                print("Ошибка при удалении данных: \(String(cString: sqlite3_errmsg(db)))")
-            } else {
-                print("Данные успешно удалены из таблицы.")
+    func deleteAllData() -> AnyPublisher<Void, Error> {
+        Future<Void, Error> { promise in
+            // Отключаем проверки внешних ключей, чтобы избежать ошибок при удалении
+            let disableForeignKeyQuery = "PRAGMA foreign_keys = OFF;"
+            
+            // Подготовка запроса на удаление данных
+            let deleteCardsQuery = "DELETE FROM Cards;"
+            let deletePicturesQuery = "DELETE FROM Pictures;"
+            let deleteRelationsQuery = "DELETE FROM CardRelations;"
+            
+            // Открытие базы данных
+            var db: OpaquePointer?
+            guard let dbFilePath = self.dbFilePath else {
+                promise(.failure(NSError(domain: "DatabaseError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Путь к базе данных не найден."])))
+                return
             }
+            
+            if sqlite3_open(dbFilePath.path, &db) != SQLITE_OK {
+                promise(.failure(NSError(domain: "DatabaseError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Не удалось открыть базу данных."])))
+                return
+            }
+            
+            // Отключаем проверки внешних ключей перед выполнением удаления
+            if sqlite3_exec(db, disableForeignKeyQuery, nil, nil, nil) != SQLITE_OK {
+                let errorMessage = String(cString: sqlite3_errmsg(db))
+                promise(.failure(NSError(domain: "DatabaseError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Не удалось отключить внешние ключи: \(errorMessage)"])))
+                sqlite3_close(db)
+                return
+            }
+            
+            // Удаляем данные из таблиц
+            let queries = [deleteCardsQuery, deletePicturesQuery, deleteRelationsQuery]
+            
+            for query in queries {
+                if sqlite3_exec(db, query, nil, nil, nil) != SQLITE_OK {
+                    let errorMessage = String(cString: sqlite3_errmsg(db))
+                    promise(.failure(NSError(domain: "DatabaseError", code: 4, userInfo: [NSLocalizedDescriptionKey: "Ошибка при удалении данных: \(errorMessage)"])))
+                    sqlite3_close(db)
+                    return
+                }
+            }
+            
+            // Включаем проверки внешних ключей обратно
+            let enableForeignKeyQuery = "PRAGMA foreign_keys = ON;"
+            if sqlite3_exec(db, enableForeignKeyQuery, nil, nil, nil) != SQLITE_OK {
+                let errorMessage = String(cString: sqlite3_errmsg(db))
+                promise(.failure(NSError(domain: "DatabaseError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Не удалось включить внешние ключи: \(errorMessage)"])))
+                sqlite3_close(db)
+                return
+            }
+            
+            // Закрытие базы данных
+            sqlite3_close(db)
+            
+            // Возвращаем успешный результат
+            promise(.success(()))
         }
-        
-        // Включаем проверки внешних ключей обратно
-        let enableForeignKeyQuery = "PRAGMA foreign_keys = ON;"
-        if sqlite3_exec(db, enableForeignKeyQuery, nil, nil, nil) != SQLITE_OK {
-            print("Не удалось включить внешние ключи: \(String(cString: sqlite3_errmsg(db)))")
-        }
-        
-        // Закрытие базы данных
-        sqlite3_close(db)
+        .eraseToAnyPublisher() // Возвращаем AnyPublisher<Void, Error>
     }
 }

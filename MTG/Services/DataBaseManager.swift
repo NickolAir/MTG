@@ -13,6 +13,6 @@ protocol DataBaseManager {
     func insertCard(id: Int, name: String, picture: CardModel.Picture) -> Bool
     func insertCards(cards: [CardModel])
     func printAllCards()
-    func deleteAllData()
+    func deleteAllData() -> AnyPublisher<Void, Error>
 }
 
