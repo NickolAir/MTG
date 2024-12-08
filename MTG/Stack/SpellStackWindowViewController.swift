@@ -117,8 +117,8 @@ class SpellStackWindowViewController: UIViewController {
         let cards = viewModel.getAllCards() // Предполагается, что метод возвращает массив всех карт
         
         for (index, card) in cards.enumerated() {
-            let imageView = UIImageView()
-            imageView.image = UIImage(named: card.picture.url!)
+            let imageView = DownloadableImageView()
+            imageView.loadImage(url: card.picture.url!)
             imageView.contentMode = .scaleAspectFit
             imageView.translatesAutoresizingMaskIntoConstraints = false
             cardStackView.addSubview(imageView)
