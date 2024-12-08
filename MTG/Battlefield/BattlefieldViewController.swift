@@ -14,11 +14,16 @@ class BattlefieldViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    
+    lazy var cardView: [CardView] = []
+    
     @objc private func addCardButtonTapped() {
         // Открываем экран выбора карты
         let cardCollectionVC = CardCollectionWindowViewController()
         cardCollectionVC.onCardSelected = { [weak self] selectedCard in
-            guard let self = self else { return }
+            
+            //guard let self = self else { return }
+            //let newCardView = CardView()
             //self.viewModel.addCard(selectedCard) // Сохраняем карту в массив
             //self.updateUI() // Обновляем интерфейс
         }

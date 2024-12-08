@@ -13,6 +13,9 @@ class CardView: UIView {
         }
     }
     
+    // TODO: add ImageView для изображения
+    // TODO: add Buttons for +, -, T
+    
     init(frame: CGRect, color: UIColor) {
         super.init(frame: frame)
         self.backgroundColor = color
