@@ -73,7 +73,7 @@ class CardImageView: UIView {
         let button = UIButton()
         button.setImage(UIImage(systemName: "icloud.and.arrow.down"), for: .normal)
         button.tintColor = .purple
-        button.backgroundColor = .systemGray.withAlphaComponent(0.5)
+        button.backgroundColor = .white.withAlphaComponent(0.7)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(downloadButtonTapped), for: .touchUpInside)
         return button
@@ -86,12 +86,13 @@ class CardImageView: UIView {
         showLoader() // Показываем лоадер
         
         DiskStorage.shared.saveImage(image, forKey: "CardImage_\(pictureId)")
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    self.hideLoader()
+                    self?.hideLoader()
+                    self?.downloadViewButton.setImage(UIImage(systemName: "internaldrive"), for: .normal)
                 case .failure(let error):
-                    self.hideLoader()
+                    self?.hideLoader()
                     print("Ошибка сохранения карты на диск: \(error.localizedDescription)")
                 }
             }, receiveValue: {
