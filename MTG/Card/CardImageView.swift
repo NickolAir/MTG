@@ -144,15 +144,19 @@ class CardImageView: UIView {
             downloadViewButton.isHidden = true
         }
         
+        
+        downloadViewButton.setImage(UIImage(systemName: "icloud.and.arrow.down"), for: .normal)
+        
         DiskStorage.shared.getImage(forKey: "CardImage_\(viewModel.picture.id!)")
-            .sink(receiveCompletion: { _ in
-                
-            }, receiveValue: { image in
-                // Изображение загружено с диска, можем переводить кнопку в состояние загружено
-                if let image = image {
-                    self.downloadViewButton.setImage(UIImage(systemName: "internaldrive"), for: .normal)
-                }
-                
-            }).store(in: &cancellables)
+                .sink(receiveCompletion: { _ in },
+                      receiveValue: { [weak self] image in
+                          guard let self else { return }
+                          if image != nil {
+                              // Если изображение найдено на диске
+                              print("Изображение \(viewModel.picture.id!) считается скачанным на диск")
+                              self.downloadViewButton.setImage(UIImage(systemName: "internaldrive"), for: .normal)
+                          }
+                      })
+                .store(in: &cancellables)
     }
 }
