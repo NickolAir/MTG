@@ -40,6 +40,20 @@ class ViewController: UIViewController {
         return button
     }()
     
+    private lazy var manaPoolButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("MANA POOL", for: .normal)
+        button.backgroundColor = UIColor.systemPurple.withAlphaComponent(0.3)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.layer.cornerRadius = 12
+        button.titleLabel?.numberOfLines = 2
+        button.titleLabel?.textAlignment = .center
+        button.addTarget(self, action: #selector(didTapManaPoolButton), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,25 +74,39 @@ class ViewController: UIViewController {
             self?.navigationItem.backBarButtonItem?.tintColor = .systemPurple
         }
         
+        viewModel.onNavigateToManaPool = { [weak self] in
+            let totalsVC = ManaPoolViewController() // Этот экран вы можете создать по аналогии
+            self?.navigationController?.pushViewController(totalsVC, animated: true)
+            self?.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self?.navigationItem.backBarButtonItem?.tintColor = .systemPurple
+        }
+        
         // Добавляем элементы на экран
         view.addSubview(titleLabel)
         view.addSubview(tabletopButton)
         view.addSubview(totalsButton)
+        view.addSubview(manaPoolButton)
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-        
+            
             tabletopButton.heightAnchor.constraint(equalToConstant: 150),
             tabletopButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 30),
             tabletopButton.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -20),
-            tabletopButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            
+            tabletopButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -50),
             
             totalsButton.heightAnchor.constraint(equalToConstant: 150),
             totalsButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -30),
             totalsButton.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 20),
-            totalsButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: totalsButton.topAnchor, constant: -50),
+            totalsButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -50),
+            
+            manaPoolButton.heightAnchor.constraint(equalToConstant: 80),
+            manaPoolButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            manaPoolButton.topAnchor.constraint(equalTo: totalsButton.bottomAnchor, constant: 30),
+            manaPoolButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 30),
+            manaPoolButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -30),
+            
+            titleLabel.bottomAnchor.constraint(equalTo: tabletopButton.topAnchor, constant: -50),
         ])
     }
     
@@ -90,5 +118,9 @@ class ViewController: UIViewController {
     // Действие при нажатии на кнопку "TOTALS"
     @objc private func didTapTotalsButton() {
         viewModel.navigateToTotals()
+    }
+    
+    @objc private func didTapManaPoolButton() {
+        viewModel.navigateToManaPool()
     }
 }
